@@ -1,17 +1,21 @@
 {
-  "name": "crudtodoapp",
-  "version": "1.0.0",
-  "description": "Simple CRUD app for thask docker",
-  "main": "src/app.js",
-  "scripts": {
-    "test": "nodemo src/app.js"
-  },
-  "keywords": [
-    "leamsigc"
-  ],
-  "author": "ismael garcia",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.16.4"
-  }
+	"name": "crudtodoapp",
+	"version": "1.0.0",
+	"description": "Simple CRUD app for thask docker",
+	"main": "src/app.js",
+	"scripts": {
+		"start": "node src/app.js",
+		"dev": "nodemon src/app.js"
+	},
+	"keywords": [
+		"leamsigc"
+	],
+	"author": "ismael garcia",
+	"license": "ISC",
+	"dependencies": {
+		"body-parser": "^1.18.3",
+		"cors": "^2.8.5",
+		"express": "^4.16.4",
+		"pg": "^7.8.1"
+	}
 }
