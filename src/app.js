@@ -1,7 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-
+//use cors
+const app = express();
+app.use(cors());
+const PORT = process.env.PORT || 5000;
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 //POSTGRESS
 const Pool = require('pg').Pool;
 
@@ -70,11 +75,6 @@ const updateTask = (isDone, id, callBack) => {
 	});
 };
 
-const app = express();
-const PORT = process.env.PORT || 5000;
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 //home page
 app.get('/', (req, res) => {
 	res.send('hello from the app ');
@@ -93,6 +93,41 @@ app.put('/api/tasks/', (req, res) => {
 	});
 });
 
+//get all tasks
+app.get('/api/tasks', (req, res) => {
+	getAllTasks((err, tasks) => {
+		if (err) {
+			res.sendStatus(500);
+		} else {
+			res.send(JSON.stringify(tasks));
+		}
+	});
+});
+//delete TASKS
+app.delete('/api/tasks/:id', (req, res) => {
+	const id = req.params.id;
+	deleteTask(id, err => {
+		if (err) {
+			res.sendStatus(500);
+		} else {
+			res.sendStatus(200);
+		}
+	});
+});
+
+//update task
+app.post('/api/tasks/:id', (req, res) => {
+	const id = req.params.id;
+	const isDone = req.body.isDone;
+
+	updateTask(id, isDone, (err, task) => {
+		if (err) {
+			res.sendStatus(500);
+		} else {
+			res.send(JSON.stringify(task));
+		}
+	});
+});
 app.listen(PORT, () => {
 	console.log(`app listening in port ${PORT}`);
 });
