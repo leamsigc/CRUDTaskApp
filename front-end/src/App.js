@@ -46,6 +46,36 @@ class App extends Component {
 			taskName: e.target.value
 		});
 	};
+	//handle toggle
+	handleToggle = task => {
+		axios
+			.post(`http://localhost:5000/api/tasks/${task.task_id}`, { isDone: !task.is_done })
+			.then(res => {
+				const updatedTask = res.data;
+				this.setState({
+					tasks: this.state.tasks.map(item => {
+						if (item.task_id === updatedTask.task_id) {
+							return updatedTask;
+						} else {
+							return item;
+						}
+					})
+				});
+			})
+			.catch(err => console.log(err));
+	};
+	handleDelete = id => {
+		axios
+			.delete(`http://localhost:5000/api/tasks/${id}`)
+			.then(res => {
+				if (res.data === 'OK') {
+					this.setState({
+						tasks: this.state.tasks.filter(item => item.task_id !== id)
+					});
+				}
+			})
+			.catch(err => console.log(err));
+	};
 	render() {
 		const { tasks } = this.state;
 		return (
@@ -60,7 +90,13 @@ class App extends Component {
 				<header className="App-header">
 					<ul>
 						{tasks.map(item => {
-							return <li key={item.task_id}>{item.task_name}</li>;
+							return (
+								<li key={item.task_id}>
+									<input type="checkbox" checked={item.is_done} onChange={() => this.handleToggle(item)} />
+									{item.task_name}
+									<button onClick={() => this.handleDelete(item.task_id)}>Delete</button>
+								</li>
+							);
 						})}
 					</ul>
 				</header>
